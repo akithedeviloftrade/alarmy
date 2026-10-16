@@ -1,0 +1,32 @@
+name: 1H Bottom Screener (ntfy)
+
+on:
+  schedule:
+    # 매시간 2분마다 정기 실행 (UTC 기준, 1시간 봉 캔들 마감 직후)
+    - cron: '2 * * * *'
+  workflow_dispatch: # Actions 탭에서 수동 테스트 실행 버튼
+
+jobs:
+  run-screener:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 코드 체크아웃
+        uses: actions/checkout@v4
+
+      - name: 파이썬 3.11 세팅
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: 필수 라이브러리 설치
+        run: |
+          pip install --upgrade pip
+          pip install yfinance ccxt pandas requests
+
+      - name: 저점 스크리너 실행 및 푸시 발송
+        env:
+          # 스마트폰 ntfy 앱에서 구독한 토픽명을 지정합니다.
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC || 'my-bottom-signal-2026' }}
+        run: python screener_ntfy.py
