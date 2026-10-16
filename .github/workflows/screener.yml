@@ -27,5 +27,5 @@ jobs:
 
       - name: 저점 스크리너 실행 및 푸시 발송
         env:
-          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC || 'my-bottom-signal-2026' }}
-        run: python screener_ntfy.py
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC || 'whatever-you-want' }}
+        run: python screener.py
